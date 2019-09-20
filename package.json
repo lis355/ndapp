@@ -1,0 +1,23 @@
+{
+	"name": "ndapp",
+	"version": "1.0.0",
+	"main": "index.js",
+	"repository": "https://github.com/lis355/ndapp.git",
+	"author": "Ivan Lartsov <lartsov@gmail.com>",
+	"license": "MIT",
+	"scripts": {
+		"test": "jest"
+	},
+	"dependencies": {
+		"detect-node": "^2.0.4",
+		"fs-extra": "^8.1.0",
+		"lodash": "^4.17.15",
+		"minimist": "^1.2.0",
+		"minimist-options": "^4.0.1",
+		"moment": "^2.24.0",
+		"stack-trace": "^0.0.10"
+	},
+	"devDependencies": {
+		"jest": "^24.9.0"
+	}
+}
