@@ -1,4 +1,4 @@
-class Enum {
+module.exports = class Enum {
 	constructor(values) {
 		let all;
 		let keys;
@@ -38,8 +38,23 @@ class Enum {
 			}
 		});
 
-		Object.freeze(this);
-	}
-}
+		const proxy = new Proxy(this, {
+			get(target, property) {
+				if (property in target) {
+					return target[property];
+				}
 
-module.exports = Enum;
+				throw new Error(`Enum '${property}' is not defined`);
+			},
+			set(target, property) {
+				throw new Error("You can't set properties on enums");
+			}
+		});
+
+		return proxy;
+	}
+
+	toString() {
+		return "Enum";
+	}
+};

@@ -37,12 +37,12 @@ class Logger {
 		group = group || GROUP_COMMON;
 		text = text || "";
 
-		const time = moment();
+		const time = +moment();
 
 		text = text.toString();
 
 		const message = {
-			time: time.unix(),
+			time,
 			level,
 			group,
 			text
@@ -79,7 +79,7 @@ class LoggerTextListener {
 			header.push(message.group);
 		}
 
-		header.push(moment.unix(message.time).format("DD.MM.YYYY HH:mm:ss"));
+		header.push(moment(message.time).format("DD.MM.YYYY HH:mm:ss:SSS"));
 
 		const logString = `[${header.join(" | ")}]: ${message.text} (${LoggerConsoleListener.getTraceInfo(7)})`;
 		return logString;
@@ -93,7 +93,7 @@ class LoggerTextListener {
 		const lineNumber = trace[depth].getLineNumber();
 		const columnNumber = trace[depth].getColumnNumber();
 
-		return `${functionName} at ${fileName}:${lineNumber}:${columnNumber}`;
+		return `${functionName} at ${fileName.replace(process.cwd(), "")}:${lineNumber}:${columnNumber}`;
 	}
 }
 

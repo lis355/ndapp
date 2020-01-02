@@ -1,9 +1,11 @@
+/* eslint-disable no-undef */
+
 const Enum = require("../tools/enum");
 
 test("test", () => {
 	const t1 = new Enum([
 		"a", "b", "c"
-	])
+	]);
 
 	expect(t1.all).toStrictEqual(["a", "b", "c"]);
 	expect(t1.keys).toStrictEqual(["a", "b", "c"]);

@@ -1,12 +1,13 @@
-const isNode = require("detect-node");
-
 const _ = require("lodash");
 const moment = require("moment");
 
+const isNode = require("./tools/isNode");
+
 const Application = require("./Application");
-const ApplicationComponent = require("./components/ApplicationComponent");
+const ApplicationComponent = require("./ApplicationComponent");
 
 const defaultApp = {
+	isNode: require("./tools/isNode"),
 	enums: {
 	},
 	constants: {
@@ -17,8 +18,11 @@ const defaultApp = {
 		moment
 	},
 	tools: {
+		math: require("./tools/math"),
 		delay: require("./tools/delay"),
-		time: require("./tools/time")
+		time: require("./tools/time"),
+		json: require("./tools/json"),
+		hash: require("./tools/hash")
 	}
 };
 
@@ -44,8 +48,7 @@ if (isNode) {
 			fs
 		},
 		tools: {
-			json: require("./tools/json"),
-			hash: require("./tools/hash"),
+			path: require("./tools/path")
 		}
 	});
 
@@ -62,30 +65,36 @@ async function ndapp(options) {
 	const application = Object.assign(options.app || new ndapp.Application(), ndapp);
 	global.app = application;
 
+	const log = require("./tools/log");
+	application.log = log(options.log);
+
 	if (isNode) {
 		const argumentsParser = require("./arguments");
-		const log = require("./tools/log");
-
 		application.arguments = argumentsParser(options.arguments);
-		application.log = log(options.log);
+	}
 
+	application.enums = {
+		...application.enums,
+		...options.enums
+	};
+
+	_.merge(application, {
+		constants: options.constants,
+		libs: options.libs,
+		tools: options.tools
+	});
+
+	if (isNode) {
 		let loadConfig = _.get(options, "config", true);
 		if (loadConfig) {
 			application.config = ndapp.tools.json.load(application.constants.CONFIG_PATH);
 		}
 	}
 
-	_.merge(application, {
-		enums: options.enums,
-		constants: options.constants,
-		libs: options.libs,
-		tools: options.tools
-	});
-
 	Object.assign(application, options.specials || {});
 
 	(options.components || []).forEach(component => {
-		component = typeof component === "function" ? component() : component;
+		component = _.isFunction(component) ? component() : component;
 		application.addComponent(component);
 	});
 
@@ -96,6 +105,6 @@ async function ndapp(options) {
 Object.assign(ndapp, defaultApp, defaultSpecials);
 global.ndapp = ndapp;
 
-require("./tools/patching");
+require("./tools/shims");
 
 module.exports = ndapp;

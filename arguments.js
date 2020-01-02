@@ -1,10 +1,24 @@
-const minimist = require("minimist");
-const buildOptions = require("minimist-options");
-
 function parseArguments(options) {
 	options = options || {};
 
-	let args = minimist(process.argv.slice(2), buildOptions(options.options));
+	// HACK для webpack, аргументы не используются для браузеров, а вебпак слишком много
+	// ругается на эту либу
+	const yargs = eval(`require("yargs")`);
+
+	let parser = yargs;
+	if (options.options) {
+		parser = parser
+			.parserConfiguration({
+				"camel-case-expansion": false,
+				"dot-notation": false,
+				"boolean-negation": false
+			})
+			.options(options.options);
+	}
+
+	const s = process.argv.slice(2).join(" ");
+	let args = parser.parse(s);
+
 	if (options.convert) {
 		args = options.convert(args);
 	}

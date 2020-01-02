@@ -1,20 +1,30 @@
 const _ = require("lodash");
 
+const isNode = require("./tools/isNode");
+
 module.exports = class Application {
 	constructor() {
+		this.initialized = false;
+
 		this.components = [];
 
-		process.on("uncaughtException", error => {
-			app.log.error(error.stack);
+		if (isNode) {
+			process.on("uncaughtException", error => { this.onUncaughtException(error); });
+			process.on("unhandledRejection", error => { this.onUnhandledRejection(error); });
 
-			this.quit();
-		});
+			const defaultErrorHandler = error => {
+				if (this.log) {
+					this.log.error(error.stack);
+				} else {
+					console.error(error);
+				}
 
-		process.on("unhandledRejection", error => {
-			app.log.error(error.stack);
+				this.quit();
+			};
 
-			this.quit();
-		});
+			this.onUncaughtException = defaultErrorHandler;
+			this.onUnhandledRejection = defaultErrorHandler;
+		}
 	}
 
 	addComponent(component) {
@@ -23,11 +33,17 @@ module.exports = class Application {
 	}
 
 	async initialize() {
+		if (this.initialized) {
+			app.log.error("Calling initialize twise or more");
+		}
+
 		for (let i = 0; i < this.components.length; i++) {
 			await this.components[i].initialize();
 
 			// app.log.info(`${this.components[i].constructor.name} initialized`);
 		}
+
+		this.initialized = true;
 	}
 
 	async run() {
@@ -47,6 +63,8 @@ module.exports = class Application {
 	}
 
 	exit() {
-		process.exit(0);
+		if (isNode) {
+			process.exit(0);
+		}
 	}
 };
