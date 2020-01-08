@@ -1,5 +1,3 @@
-const moment = require("moment");
-
 /**
  * Second timer
  */
@@ -9,14 +7,16 @@ class Timer {
 	}
 
 	reset() {
-		this.startTime = moment().valueOf();
+		this.ts = process.hrtime();
 	}
 
 	/**
 	 * Time from start in seconds
 	 */
 	time() {
-		return (moment() - this.startTime) / 1000;
+		const t = process.hrtime(this.ts);
+		const s = t[0] + t[1] / 10 ** 9;
+		return s;
 	}
 }
 
