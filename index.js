@@ -59,10 +59,23 @@ if (isNode) {
 	});
 }
 
+async function callCallback(application, options, name) {
+	const callback = options[name];
+	if (_.isFunction(callback)) {
+		await callback.call(application);
+	}
+}
+
 async function ndapp(options) {
+	if (_.isFunction(options)) {
+		options = { onRun: options };
+	}
+
 	options = options || {};
 
 	const application = Object.assign(options.app || new ndapp.Application(), ndapp);
+	await callCallback(application, options, "onCreate");
+
 	global.app = application;
 
 	const log = require("./tools/log");
@@ -86,8 +99,9 @@ async function ndapp(options) {
 
 	if (isNode) {
 		let loadConfig = _.get(options, "config", true);
-		if (loadConfig) {
-			application.config = ndapp.tools.json.load(application.constants.CONFIG_PATH);
+		const configPath = application.constants.CONFIG_PATH;
+		if (loadConfig && ndapp.fs.existsSync(configPath)) {
+			application.config = ndapp.tools.json.load(configPath);
 		}
 	}
 
@@ -99,7 +113,10 @@ async function ndapp(options) {
 	});
 
 	await application.initialize();
+	await callCallback(application, options, "onInitialize");
+
 	await application.run();
+	await callCallback(application, options, "onRun");
 }
 
 Object.assign(ndapp, defaultApp, defaultSpecials);

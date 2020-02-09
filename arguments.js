@@ -3,7 +3,8 @@ function parseArguments(options) {
 
 	// HACK для webpack, аргументы не используются для браузеров, а вебпак слишком много
 	// ругается на эту либу
-	const yargs = eval(`require("yargs")`);
+	// eslint-disable-next-line no-eval
+	const yargs = eval("require(\"yargs\")");
 
 	let parser = yargs;
 	if (options.options) {
