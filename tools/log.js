@@ -1,6 +1,4 @@
-const fs = require("fs-extra");
-const path = require("path");
-const os = require("os");
+const isNode = require("./isNode");
 
 const moment = require("moment");
 const stackTrace = require("stack-trace");
@@ -117,20 +115,27 @@ class LoggerConsoleListener extends LoggerTextListener {
 	}
 }
 
-class LoggerFileListener extends LoggerTextListener {
-	constructor(logPath) {
-		super();
+let LoggerFileListener;
+if (isNode) {
+	const fs = require("fs-extra");
+	const path = require("path");
+	const os = require("os");
 
-		logPath = logPath || path.join(process.cwd(), "log.txt");
-		fs.removeSync(logPath);
+	LoggerFileListener = class extends LoggerTextListener {
+		constructor(logPath) {
+			super();
 
-		this.logStream = fs.createWriteStream(logPath, { flags: "a" });
-	}
+			logPath = logPath || path.join(process.cwd(), "log.txt");
+			fs.removeSync(logPath);
 
-	handleMessage(message) {
-		const text = LoggerTextListener.convertMessageToText(message);
-		this.logStream.write(text + os.EOL);
-	}
+			this.logStream = fs.createWriteStream(logPath, { flags: "a" });
+		}
+
+		handleMessage(message) {
+			const text = LoggerTextListener.convertMessageToText(message);
+			this.logStream.write(text + os.EOL);
+		}
+	};
 }
 
 function loggerCreator(options) {
@@ -143,7 +148,7 @@ function loggerCreator(options) {
 	logger.addListener(loggerConsoleListener.handleMessage.bind(loggerConsoleListener));
 	logger.setConsoleLogGroupFilter = loggerConsoleListener.setConsoleLogGroupFilter.bind(loggerConsoleListener);
 
-	if (options.file) {
+	if (isNode && options.file) {
 		if (options.file === true) options.file = null;
 
 		const loggerFileListener = new LoggerFileListener(options.file);

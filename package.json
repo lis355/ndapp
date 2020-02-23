@@ -1,6 +1,6 @@
 {
 	"name": "ndapp",
-	"version": "1.0.6",
+	"version": "1.0.7",
 	"main": "index.js",
 	"repository": "https://github.com/lis355/ndapp.git",
 	"author": "Ivan Lartsov <lartsov@gmail.com>",
@@ -11,13 +11,14 @@
 	"dependencies": {
 		"fs-extra": "^8.1.0",
 		"lodash": "^4.17.15",
+		"md5": "^2.2.1",
 		"moment": "^2.24.0",
 		"stack-trace": "^0.0.10",
-		"yargs": "^15.0.2"
+		"yargs": "^15.1.0"
 	},
 	"devDependencies": {
 		"eslint": "^6.7.2",
 		"eslint-config-protop": "^1.0.0",
-		"jest": "^24.9.0"
+		"jest": "^25.1.0"
 	}
 }
