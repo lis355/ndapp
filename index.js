@@ -98,12 +98,22 @@ async function ndapp(options) {
 	});
 
 	if (isNode) {
-		let loadConfig = _.get(options, "config", true);
-		const configPath = application.constants.CONFIG_PATH;
-		if (loadConfig && ndapp.fs.existsSync(configPath)) {
+		const configOption = _.get(options, "config");
+		let configPath;
+		if (configOption === true) {
+			configPath = application.arguments.config;
+		} else if (configOption) {
+			configPath = configOption;
+		} else if (application.arguments.config) {
+			configPath = application.arguments.config;
+		}
+
+		if (configPath && ndapp.fs.existsSync(configPath)) {
 			application.config = ndapp.tools.json.load(configPath);
 		}
 	}
+
+	application.config = application.config || {};
 
 	Object.assign(application, options.specials || {});
 
