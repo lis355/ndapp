@@ -12,8 +12,7 @@ function parseArguments(options) {
 		...options.options,
 		config: {
 			type: "string",
-			default: "",
-			coerce: ndapp.tools.path.fromRelativePathToAbsolutePath
+			default: ""
 		}
 	};
 
@@ -28,11 +27,14 @@ function parseArguments(options) {
 	const s = process.argv.slice(2).join(" ");
 	let args = parser.parse(s);
 
+	const config = args.config && ndapp.tools.path.fromRelativePathToAbsolutePath(args.config);
+
 	if (options.convert) {
-		args = {
-			...options.convert(args),
-			config: args.config
-		};
+		args = options.convert(args);
+	}
+
+	if (config) {
+		args.config = config;
 	}
 
 	return args;

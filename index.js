@@ -39,9 +39,6 @@ if (isNode) {
 	const fs = require("fs-extra");
 
 	_.merge(defaultApp, {
-		constants: {
-			"CONFIG_PATH": path.join(process.cwd(), "config.json")
-		},
 		libs: {
 			path,
 			os,
@@ -100,12 +97,12 @@ async function ndapp(options) {
 	if (isNode) {
 		const configOption = _.get(options, "config");
 		let configPath;
-		if (configOption === true) {
+		if (application.arguments.config) {
 			configPath = application.arguments.config;
+		} else if (configOption === true) {
+			configPath = ndapp.tools.path.fromRelativePathToAbsolutePath("config.json");
 		} else if (configOption) {
 			configPath = configOption;
-		} else if (application.arguments.config) {
-			configPath = application.arguments.config;
 		}
 
 		if (configPath && ndapp.fs.existsSync(configPath)) {
