@@ -112,14 +112,6 @@ async function ndapp(options) {
 
 	application.config = application.config || {};
 
-	if (!application.time) {
-		_.assign(application, {
-			get time() {
-				return moment().valueOf();
-			}
-		});
-	}
-
 	Object.assign(application, options.specials || {});
 
 	(options.components || []).forEach(component => {

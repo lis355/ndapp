@@ -1,5 +1,5 @@
 const ndapp = require("../index");
 
 ndapp(async () => {
-	app.log.info("Hello! " + app.moment(app.time).format("DD.MM.YYYY HH:mm"));
+	app.log.info("Hello! " + app.time.format("DD.MM.YYYY HH:mm"));
 });

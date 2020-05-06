@@ -1,4 +1,5 @@
 const _ = require("lodash");
+const moment = require("moment");
 
 const isNode = require("./tools/isNode");
 
@@ -60,6 +61,10 @@ module.exports = class Application {
 		}
 
 		this.exit();
+	}
+
+	get time() {
+		return moment();
 	}
 
 	exit() {
