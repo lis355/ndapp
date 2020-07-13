@@ -1,10 +1,7 @@
+const yargs = require("yargs");
+
 function parseArguments(options) {
 	options = options || {};
-
-	// HACK для webpack, аргументы не используются для браузеров, а вебпак слишком много
-	// ругается на эту либу
-	// eslint-disable-next-line no-eval
-	const yargs = eval("require(\"yargs\")");
 
 	let parser = yargs;
 	options.options = options.options || {};
