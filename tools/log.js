@@ -127,9 +127,8 @@ if (isNode) {
 
 			logPath = logPath || path.join(process.cwd(), "log.txt");
 
-			const logDirectory = path.dirname(logPath);
-			app.fs.removeSync(logDirectory);
-			app.fs.ensureDirSync(logDirectory);
+			app.fs.ensureDirSync(path.dirname(logPath));
+			app.fs.removeSync(logPath);
 
 			this.logStream = fs.createWriteStream(logPath, { flags: "a" });
 		}
