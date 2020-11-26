@@ -55,21 +55,21 @@ module.exports = class Application {
 		}
 	}
 
-	async quit() {
+	async quit(code = 0) {
 		for (let i = 0; i < this.components.length; i++) {
-			await this.components[i].exit();
+			await this.components[i].exit(code);
 		}
 
-		this.exit();
+		this.exit(code);
 	}
 
 	get time() {
 		return moment();
 	}
 
-	exit() {
+	exit(code = 0) {
 		if (isNode) {
-			process.exit(0);
+			process.exit(code);
 		}
 	}
 };

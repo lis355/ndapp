@@ -13,5 +13,5 @@ module.exports = class ApplicationComponent {
 
 	async run() { }
 
-	async exit() { }
+	async exit(code) { }
 };
