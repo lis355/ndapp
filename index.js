@@ -45,7 +45,6 @@ if (isNode) {
 			fs
 		},
 		tools: {
-			path: require("./tools/path")
 		}
 	});
 
@@ -100,7 +99,7 @@ async function ndapp(options) {
 		if (application.arguments.config) {
 			configPath = application.arguments.config;
 		} else if (configOption === true) {
-			configPath = ndapp.tools.path.fromRelativePathToAbsolutePath("config.json");
+			configPath = ndapp.path.resolve("config.json");
 		} else if (configOption) {
 			configPath = configOption;
 		}

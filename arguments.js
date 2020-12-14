@@ -24,7 +24,7 @@ function parseArguments(options) {
 	const s = process.argv.slice(2).join(" ");
 	let args = parser.parse(s);
 
-	const config = args.config && ndapp.tools.path.fromRelativePathToAbsolutePath(args.config);
+	const config = args.config;
 
 	if (options.convert) {
 		args = options.convert(args);
