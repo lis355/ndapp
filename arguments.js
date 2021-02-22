@@ -1,4 +1,4 @@
-const yargs = require("yargs");
+const yargs = require("yargs-parser");
 
 function parseArguments(options) {
 	options = options || {};
@@ -10,19 +10,16 @@ function parseArguments(options) {
 		config: {
 			type: "string",
 			default: ""
-		}
-	};
-
-	parser = parser
-		.parserConfiguration({
+		},
+		configuration: {
 			"camel-case-expansion": false,
 			"dot-notation": false,
 			"boolean-negation": false
-		})
-		.options(parserOptions);
+		}
+	};
 
 	const s = process.argv.slice(2).join(" ");
-	let args = parser.parse(s);
+	let args = parser(s, parserOptions);
 
 	const config = args.config;
 

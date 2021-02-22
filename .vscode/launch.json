@@ -12,7 +12,9 @@
                 "<node_internals>/**"
             ],
             "program": "${workspaceFolder}/examples/testApp.js",
-            "args": []
+            "args": [
+                "--test=1 first second"
+            ]
         }
     ]
 }
